@@ -1,0 +1,47 @@
+from datetime import datetime
+
+class Libro:
+    def __init__(self, titulo, autor, isbn, fecha_publicacion, genero, paginas):
+        self.titulo = titulo
+        self.autor = autor
+        self.isbn = isbn
+        self.fecha_publicacion = fecha_publicacion
+        self.genero = genero
+        self.paginas = paginas
+        self.historial_prestamos = []
+
+    def prestar(self, usuario, fecha_prestamo):
+        self.historial_prestamos.append((usuario, fecha_prestamo))
+        print(f"Libro '{self.titulo}' prestado a {usuario.nombre} hasta el {fecha_prestamo.strftime('%d/%m/%Y')}")
+
+    def devolver(self, fecha_devolucion):
+        if self.historial_prestamos:
+            _, fecha_prestamo = self.historial_prestamos[-1]
+            print(f"Libro '{self.titulo}' devuelto. Se prestó el {fecha_prestamo.strftime('%d/%m/%Y')} y se devolvió el {fecha_devolucion.strftime('%d/%m/%Y')}")
+            self.historial_prestamos.pop()
+        else:
+            print("El libro no ha sido prestado.")
+
+class Usuario:
+    def __init__(self, nombre, id_usuario):
+        self.nombre = nombre
+        self.id_usuario = id_usuario
+        self.libros_prestados = []
+
+    def prestar_libro(self, libro, fecha_prestamo):
+        libro.prestar(self, fecha_prestamo)
+        self.libros_prestados.append(libro)
+
+# Ejemplo de uso
+libro1 = Libro("1984", "George Orwell", "0451534850", datetime(1949, 6, 8), "Distopía", 328)
+libro2 = Libro("El Señor de los Anillos", "J.R.R. Tolkien", "0618346037", datetime(1954, 2, 9), "Fantasía", 1178)
+libro3 = Libro("Harry Potter y la Piedra Filosofal", "J.K. Rowling", "0439064868", datetime(1997, 6, 26), "Fantasía", 320)  # ¡Agregamos Harry Potter!
+usuario1 = Usuario("Ana García", 456)
+usuario2 = Usuario("Pedro López", 789)
+
+fecha_prestamo = datetime.now()
+usuario1.prestar_libro(libro1, fecha_prestamo)
+
+# Simular devolución
+fecha_devolucion = datetime.now() + timedelta(days=14)
+libro1.devolver(fecha_devolucion)
